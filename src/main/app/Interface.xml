@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+    <http:listener-config name="human-resources-api-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <apikit:config name="human-resources-api-config" raml="human-resources-api.raml" consoleEnabled="false" doc:name="Router"/>
+    <flow name="human-resources-api-main">
+        <http:listener config-ref="human-resources-api-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
+        <apikit:router config-ref="human-resources-api-config" doc:name="APIkit Router"/>
+        <exception-strategy ref="human-resources-api-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
+    </flow>
+    <flow name="human-resources-api-console">
+        <http:listener config-ref="human-resources-api-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
+        <apikit:console config-ref="human-resources-api-config" doc:name="APIkit Console"/>
+    </flow>
+    <flow name="put:/companies/{company_id}:human-resources-api-config">
+        <set-payload value="{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Company&quot;, &quot;creationDate&quot;: &quot;2019-11-06&quot;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="put:/departments/{department_id}:human-resources-api-config">
+        <set-payload value="{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Company&quot;, &quot;companyId&quot;: 1, &quot;creationDate&quot;: &quot;2019-11-06&quot;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="put:/employees/{employee_id}:human-resources-api-config">
+        <set-payload value="{ &#xA;  &quot;id&quot; : 10, &#xA;  &quot;firstName&quot; : &quot;Guy&quot;,&#xA;  &quot;lastName&quot; : &quot;Ritchie&quot;,&#xA;  &quot;age&quot; : 51,&#xA;  &quot;passportNumber&quot; : &quot;AA888888&quot;,&#xA;  &quot;phoneNumber&quot; : &quot;+37369888888&quot;,&#xA;  &quot;address&quot; : &quot;IT&quot;,&#xA;  &quot;companyId&quot; : 2,&#xA;  &quot;departmentId&quot; : 1,&#xA;  &quot;position&quot; : &quot;film producer&quot;, &#xA;  &quot;login&quot; : &quot;guy&quot;, &#xA;  &quot;password&quot; : &quot;ritchie&quot;, &#xA;  &quot;roles&quot; : &quot;USER&quot;,&#xA;  &quot;creationDate&quot;: &quot;2019-11-06&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="put:/vacations/{vacation_id}:human-resources-api-config">
+        <set-payload value="{ &#xA;  &quot;id&quot; : 1, &#xA;  &quot;employeeId&quot; : 9,&#xA;  &quot;companyId&quot; : 2,&#xA;  &quot;departmentId&quot; : 3,&#xA;  &quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;  &quot;periodOfDays&quot; : 25,&#xA;  &quot;status&quot;: &quot;Approved&quot;,&#xA;  &quot;creationDate&quot;: &quot;2019-11-06&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="delete:/companies/{company_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="{&#xA;&quot;message&quot; : &quot;The company deleted successfully&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="delete:/departments/{department_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="{&#xA;&quot;message&quot; : &quot;The department deleted successfully&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="delete:/employees/{employee_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="{&#xA;&quot;message&quot; : &quot;The employee deleted successfully&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="delete:/vacations/{vacation_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="{&#xA;&quot;message&quot; : &quot;The vacation deleted successfully&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/companies:human-resources-api-config">
+        <set-payload value="[{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Company&quot;},{&quot;id&quot; : 2, &quot;name&quot; : &quot;Second Company&quot;}]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/vacations/companies/{company_id}:human-resources-api-config">
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 1, &#xA;    &quot;employeeId&quot; : 9,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 3,&#xA;    &quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;    &quot;periodOfDays&quot; : 25,&#xA;    &quot;status&quot;: &quot;In process&quot;&#xA;  },&#xA;  {&#xA;    &quot;id&quot; : 1, &#xA;    &quot;employeeId&quot; : 10,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 3,&#xA;    &quot;startDate&quot; : &quot;2020-06-23&quot;,&#xA;    &quot;periodOfDays&quot; : 15,&#xA;    &quot;status&quot;: &quot;In process&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/employees/companies/{company_id}:human-resources-api-config">
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 9, &#xA;    &quot;firstName&quot; : &quot;Alexander&quot;,&#xA;    &quot;lastName&quot; : &quot;Kolosov&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;java developer&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 5, &#xA;    &quot;firstName&quot; : &quot;John&quot;,&#xA;    &quot;lastName&quot; : &quot;Snow&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;warrior&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/departments/companies/{company_id}:human-resources-api-config">
+        <set-payload value="[{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Department&quot;, &quot;companyId&quot;: 1},{&quot;id&quot; : 2, &quot;name&quot; : &quot;Second Department&quot;, &quot;companyId&quot;: 1}]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/departments:human-resources-api-config">
+        <set-payload value="[{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Department&quot;, &quot;companyId&quot;: 1},{&quot;id&quot; : 2, &quot;name&quot; : &quot;Second Department&quot;, &quot;companyId&quot;: 1}]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/vacations/departments/{department_id}:human-resources-api-config">
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 1, &#xA;    &quot;employeeId&quot; : 9,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 3,&#xA;    &quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;    &quot;periodOfDays&quot; : 25,&#xA;    &quot;status&quot;: &quot;In process&quot;&#xA;  },&#xA;  {&#xA;    &quot;id&quot; : 1, &#xA;    &quot;employeeId&quot; : 10,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 3,&#xA;    &quot;startDate&quot; : &quot;2020-06-23&quot;,&#xA;    &quot;periodOfDays&quot; : 15,&#xA;    &quot;status&quot;: &quot;In process&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/employees/departments/{department_id}:human-resources-api-config">
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 9, &#xA;    &quot;firstName&quot; : &quot;Alexander&quot;,&#xA;    &quot;lastName&quot; : &quot;Kolosov&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;java developer&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 5, &#xA;    &quot;firstName&quot; : &quot;John&quot;,&#xA;    &quot;lastName&quot; : &quot;Snow&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;warrior&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/employees:human-resources-api-config">
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 9, &#xA;    &quot;firstName&quot; : &quot;Alexander&quot;,&#xA;    &quot;lastName&quot; : &quot;Kolosov&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;java developer&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 5, &#xA;    &quot;firstName&quot; : &quot;John&quot;,&#xA;    &quot;lastName&quot; : &quot;Snow&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;warrior&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/vacations/employees/{employee_id}:human-resources-api-config">
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 1, &#xA;    &quot;employeeId&quot; : 9,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 3,&#xA;    &quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;    &quot;periodOfDays&quot; : 25,&#xA;    &quot;status&quot;: &quot;In process&quot;&#xA;  },&#xA;  {&#xA;    &quot;id&quot; : 1, &#xA;    &quot;employeeId&quot; : 10,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 3,&#xA;    &quot;startDate&quot; : &quot;2020-06-23&quot;,&#xA;    &quot;periodOfDays&quot; : 15,&#xA;    &quot;status&quot;: &quot;In process&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/vacations:human-resources-api-config">
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 1, &#xA;    &quot;employeeId&quot; : 9,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 3,&#xA;    &quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;    &quot;periodOfDays&quot; : 25,&#xA;    &quot;status&quot;: &quot;In process&quot;&#xA;  },&#xA;  {&#xA;    &quot;id&quot; : 1, &#xA;    &quot;employeeId&quot; : 10,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 3,&#xA;    &quot;startDate&quot; : &quot;2020-06-23&quot;,&#xA;    &quot;periodOfDays&quot; : 15,&#xA;    &quot;status&quot;: &quot;In process&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/companies/{company_id}:human-resources-api-config">
+        <set-payload value="{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Company&quot;, &quot;creationDate&quot;: &quot;2019-11-06&quot;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/departments/{department_id}:human-resources-api-config">
+        <set-payload value="{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Department&quot;, &quot;companyId&quot;: 1, &quot;creationDate&quot;: &quot;2019-11-06&quot;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/employees/{employee_id}:human-resources-api-config">
+        <set-payload value="{ &#xA;  &quot;id&quot; : 10, &#xA;  &quot;firstName&quot; : &quot;Guy&quot;,&#xA;  &quot;lastName&quot; : &quot;Ritchie&quot;,&#xA;  &quot;age&quot; : 51,&#xA;  &quot;passportNumber&quot; : &quot;AA888888&quot;,&#xA;  &quot;phoneNumber&quot; : &quot;+37369888888&quot;,&#xA;  &quot;address&quot; : &quot;IT&quot;,&#xA;  &quot;companyId&quot; : 2,&#xA;  &quot;departmentId&quot; : 1,&#xA;  &quot;position&quot; : &quot;film producer&quot;, &#xA;  &quot;login&quot; : &quot;guy&quot;, &#xA;  &quot;password&quot; : &quot;ritchie&quot;, &#xA;  &quot;roles&quot; : &quot;USER&quot;,&#xA;  &quot;creationDate&quot;: &quot;2019-11-06&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/vacations/{vacation_id}:human-resources-api-config">
+        <set-payload value="{ &#xA;  &quot;id&quot; : 1, &#xA;  &quot;employeeId&quot; : 9,&#xA;  &quot;companyId&quot; : 2,&#xA;  &quot;departmentId&quot; : 3,&#xA;  &quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;  &quot;periodOfDays&quot; : 25,&#xA;  &quot;status&quot;: &quot;In process&quot;,&#xA;  &quot;creationDate&quot;: &quot;2019-11-06&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/companies:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;name&quot; : &quot;First Company&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 2,&#xA;&quot;name&quot; : &quot;Second Company&quot;&#xA;}&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/departments/companies/{company_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Department&quot;, &quot;companyId&quot;: 1},{&quot;id&quot; : 2, &quot;name&quot; : &quot;Second Department&quot;, &quot;companyId&quot;: 1},{&quot;id&quot; : 3, &quot;name&quot; : &quot;Third Department&quot;, &quot;companyId&quot;: 1}]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/employees/companies/{company_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 9, &#xA;    &quot;firstName&quot; : &quot;Alexander&quot;,&#xA;    &quot;lastName&quot; : &quot;Kolosov&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;java developer&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 5, &#xA;    &quot;firstName&quot; : &quot;John&quot;,&#xA;    &quot;lastName&quot; : &quot;Snow&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;warrior&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 10, &#xA;    &quot;firstName&quot; : &quot;Guy&quot;,&#xA;    &quot;lastName&quot; : &quot;Ritchie&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;film producer&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/vacations/companies/{company_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;employeeId&quot; : 9,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;&quot;periodOfDays&quot; : 25,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;employeeId&quot; : 10,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-06-23&quot;,&#xA;&quot;periodOfDays&quot; : 15,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 11,&#xA;&quot;employeeId&quot; : 5,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-09-23&quot;,&#xA;&quot;periodOfDays&quot; : 20,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;}&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/departments:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Department&quot;, &quot;companyId&quot;: 1},{&quot;id&quot; : 2, &quot;name&quot; : &quot;Second Department&quot;, &quot;companyId&quot;: 1},{&quot;id&quot; : 3, &quot;name&quot; : &quot;Third Department&quot;, &quot;companyId&quot;: 1}]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/vacations/departments/{department_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;employeeId&quot; : 9,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;&quot;periodOfDays&quot; : 25,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;employeeId&quot; : 10,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-06-23&quot;,&#xA;&quot;periodOfDays&quot; : 15,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 11,&#xA;&quot;employeeId&quot; : 5,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-09-23&quot;,&#xA;&quot;periodOfDays&quot; : 20,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;}&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/employees/departments/{department_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 9, &#xA;    &quot;firstName&quot; : &quot;Alexander&quot;,&#xA;    &quot;lastName&quot; : &quot;Kolosov&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;java developer&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 5, &#xA;    &quot;firstName&quot; : &quot;John&quot;,&#xA;    &quot;lastName&quot; : &quot;Snow&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;warrior&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 10, &#xA;    &quot;firstName&quot; : &quot;Guy&quot;,&#xA;    &quot;lastName&quot; : &quot;Ritchie&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;film producer&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/employees:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[&#xA;  { &#xA;    &quot;id&quot; : 9, &#xA;    &quot;firstName&quot; : &quot;Alexander&quot;,&#xA;    &quot;lastName&quot; : &quot;Kolosov&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;java developer&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 5, &#xA;    &quot;firstName&quot; : &quot;John&quot;,&#xA;    &quot;lastName&quot; : &quot;Snow&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;warrior&quot;&#xA;  },&#xA;  { &#xA;    &quot;id&quot; : 10, &#xA;    &quot;firstName&quot; : &quot;Guy&quot;,&#xA;    &quot;lastName&quot; : &quot;Ritchie&quot;,&#xA;    &quot;companyId&quot; : 2,&#xA;    &quot;departmentId&quot; : 1,&#xA;    &quot;position&quot; : &quot;film producer&quot;&#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/vacations/employees/{employee_id}:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;employeeId&quot; : 9,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;&quot;periodOfDays&quot; : 25,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;employeeId&quot; : 10,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-06-23&quot;,&#xA;&quot;periodOfDays&quot; : 15,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 11,&#xA;&quot;employeeId&quot; : 5,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-09-23&quot;,&#xA;&quot;periodOfDays&quot; : 20,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;}&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/vacations:human-resources-api-config">
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="[&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;employeeId&quot; : 9,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-05-23&quot;,&#xA;&quot;periodOfDays&quot; : 25,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 1,&#xA;&quot;employeeId&quot; : 10,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-06-23&quot;,&#xA;&quot;periodOfDays&quot; : 15,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;},&#xA;{&#xA;&quot;id&quot; : 11,&#xA;&quot;employeeId&quot; : 5,&#xA;&quot;companyId&quot; : 2,&#xA;&quot;departmentId&quot; : 3,&#xA;&quot;startDate&quot; : &quot;2020-09-23&quot;,&#xA;&quot;periodOfDays&quot; : 20,&#xA;&quot;status&quot; : &quot;In process&quot;&#xA;}&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <apikit:mapping-exception-strategy name="human-resources-api-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>
