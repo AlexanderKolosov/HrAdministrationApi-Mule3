@@ -43,7 +43,7 @@ securitySchemes:
       201:
         body:
           application/json:
-            example:
+            example: |
               [{"id" : 1, "name" : "First Company"},{"id" : 2, "name" : "Second Company"}]
       400:
         body:
@@ -109,7 +109,8 @@ securitySchemes:
       responses:
         204:
           body:
-            example: { "message" : "The company deleted successfully"}
+            application/json:
+              example: { "message" : "The company deleted successfully"}
         400:
           body:
             application/json:

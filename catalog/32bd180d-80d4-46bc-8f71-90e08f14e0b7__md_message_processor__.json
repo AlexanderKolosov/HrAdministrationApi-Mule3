@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {},
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "vacations_json"
+        }
+    },
+    "id": "32bd180d-80d4-46bc-8f71-90e08f14e0b7",
+    "version": "5.2.0.0"
+}

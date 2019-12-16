@@ -1,7 +1,534 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.9.3"
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <flow name="getCompaniesFlow">
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT * 
+FROM company]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="b8416f82-a157-4b33-8e73-a8b21c0ad284">
+            <dw:input-payload doc:sample="sample_data\list_map_5.dwl"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	name: payload01.name
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+
+    </flow>
+    <flow name="postCompaniesFlow">
+        <set-variable variableName="name" value="#[json:name]" doc:name="Variable"/>
+
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO company(name, creation_date)
+VALUES(#[flowVars.name], #[function:now])]]></db:parameterized-query>
+
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Company &quot;#[flowVars.name]&quot; was created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+
+    </flow>
+    <flow name="getCompanyByIdFlow">
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM company
+WHERE id=#[flowVars.companyId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:input-payload doc:sample="sample_data\list_map_6.dwl"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	id: payload.id[0],
+	name: payload.name[0],
+	creationDate: payload.creation_date[0] as :date {format: "yyyy-MM-dd"}
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="putCompanyByIdFlow">
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <set-variable variableName="name" value="#[json:name]" doc:name="Variable"/>
+        <db:update config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[UPDATE company
+SET 
+	name = #[flowVars.name]
+WHERE id = #[flowVars.companyId]]]></db:parameterized-query>
+        </db:update>
+        <set-payload value="{&quot;message&quot;: &quot;Company &quot;#[flowVars.name]&quot; was modified successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="deleteCompanyByIdFlow">
+        <set-property propertyName="http.status" value="200" doc:name="Property"/>
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM company
+WHERE id=#[flowVars.companyId]]]></db:parameterized-query>
+        </db:select>
+        <set-variable variableName="name" value="#[payload[0].name]" doc:name="Variable"/>
+        <db:delete config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[DELETE FROM company
+WHERE id=#[flowVars.companyId]]]></db:parameterized-query>
+        </db:delete>
+        <set-payload value="{&quot;message&quot;: &quot;Company &quot;#[flowVars.name]&quot; was deleted successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+
+
+    <flow name="getDepartmentsFlow">
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT * 
+FROM department]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	name: payload01.name,
+	companyId: payload01.company_id
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+
+    </flow>
+    <flow name="postDepartmentsFlow">
+        <set-variable variableName="name" value="#[json:name]" doc:name="Variable"/>
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO department(name, company_id, creation_date)
+VALUES(#[flowVars.name], #[json:companyId], #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Department &quot;#[flowVars.name]&quot; created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getDepartmentByIdFlow">
+        <set-variable variableName="departmentId" value="#[message.inboundProperties.'http.uri.params'.department_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM department
+WHERE id=#[flowVars.departmentId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	id: payload.id[0],
+	name: payload.name[0],
+	companyId: payload.company_id[0],
+	creationDate: payload.creation_date[0] as :date {format: "yyyy-MM-dd"}
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="putDepartmentByIdFlow">
+        <set-variable variableName="departmentId" value="#[message.inboundProperties.'http.uri.params'.department_id]" doc:name="Variable"/>
+        <set-variable variableName="name" value="#[json:name]" doc:name="Variable"/>
+        <db:update config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[UPDATE department
+SET
+	name = #[flowVars.name], 
+	company_id = #[json:companyId]
+WHERE id = #[flowVars.departmentId]]]></db:parameterized-query>
+        </db:update>
+        <set-payload value="{&quot;message&quot;: &quot;Department &quot;#[flowVars.name]&quot; modified successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="deleteDepartmentByIdFlow">
+        <set-property propertyName="http.status" value="200" doc:name="Property"/>
+        <set-variable variableName="departmentId" value="#[message.inboundProperties.'http.uri.params'.department_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM department
+WHERE id=#[flowVars.departmentId]]]></db:parameterized-query>
+        </db:select>
+        <set-variable variableName="name" value="#[payload[0].name]" doc:name="Variable"/>
+        <db:delete config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[DELETE FROM department
+WHERE id=#[flowVars.departmentId]]]></db:parameterized-query>
+        </db:delete>
+        <set-payload value="{&quot;message&quot;: &quot;Department &quot;#[flowVars.name]&quot; deleted successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getDepartmentByCompanyIdFlow">
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM department
+WHERE company_id=#[flowVars.companyId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="7e64b13c-550a-4499-a90b-d3d4fadd0176">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((key, value) -> {
+	id: key.id,
+	name: key.name,
+	companyId: key.company_id
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="postDepartmentsByCompanyIdFlow">
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <set-variable variableName="name" value="#[json:name]" doc:name="Variable"/>
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO department(name, company_id, creation_date)
+VALUES(#[flowVars.name], #[flowVars.companyId], #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Department &quot;#[flowVars.name]&quot; created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getEmployeesFlow">
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM employee]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	firstName: payload01.first_name,
+	lastName: payload01.last_name,
+	companyId: payload01.company_id,
+	departmentId: payload01.department_id,
+	position: payload01.position
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+
+    </flow>
+    <flow name="postEmployeesFlow">
+        <set-variable variableName="name" value="#[json:firstName] #[json:lastName]" doc:name="Variable"/>
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO employee(first_name, last_name, age, passport_number, phone_number, address, company_id, department_id, password, position, roles, login, creation_date)
+VALUES(#[json:firstName], #[json:lastName], #[json:age], #[json:passportNumber], #[json:phoneNumber], #[json:address], #[json:companyId], #[json:departmentId], #[json:password], #[json:position], #[json:roles], #[json:login], #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Employee &quot;#[flowVars.name]&quot; was created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getEmployeeByIdFlow">
+        <set-variable variableName="employeeId" value="#[message.inboundProperties.'http.uri.params'.employee_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM employee
+WHERE id=#[flowVars.employeeId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="89699d11-1c5d-461e-ac7c-7c28532f4ebc">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	id: payload.id[0],
+	firstName: payload.first_name[0],
+	lastName: payload.last_name[0],
+	age: payload.age[0],
+	passportNumber: payload.passport_number[0],
+	phoneNumber: payload.phone_number[0],
+	address: payload.address[0],
+	companyId: payload.company_id[0],
+	departmentId: payload.department_id[0],
+	position: payload.position[0],
+	login: payload.login[0],
+	password: payload.password[0],
+	roles: payload.roles[0],
+	creationDate: payload.creation_date[0] as :date {format: "yyyy-MM-dd"}
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="putEmployeeByIdFlow">
+        <set-variable variableName="name" value="#[json:firstName] #[json:lastName]" doc:name="Variable"/>
+        <set-variable variableName="employeeId" value="#[message.inboundProperties.'http.uri.params'.employee_id]" doc:name="Variable"/>
+        <db:update config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[UPDATE employee
+SET
+	first_name = #[json:firstName], 
+	last_name = #[json:lastName], 
+	age = #[json:age], 
+	passport_number = #[json:passportNumber], 
+	phone_number = #[json:phoneNumber], 
+	address = #[json:address], 
+	company_id = #[json:companyId], 
+	department_id = #[json:departmentId], 
+	password = #[json:password], 
+	position = #[json:position], 
+	roles = #[json:roles], 
+	login = #[json:login]
+WHERE id = #[flowVars.employeeId]]]></db:parameterized-query>
+        </db:update>
+        <set-payload value="{&quot;message&quot;: &quot;Employee &quot;#[flowVars.name]&quot; was modified successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="deleteEmployeeByIdFlow">
+        <set-property propertyName="http.status" value="200" doc:name="Property"/>
+        <set-variable variableName="employeeId" value="#[message.inboundProperties.'http.uri.params'.employee_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM employee
+WHERE id=#[flowVars.employeeId]]]></db:parameterized-query>
+        </db:select>
+        <set-variable variableName="name" value="#[json:firstName] #[json:lastName]" doc:name="Variable"/>
+        <db:delete config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[DELETE FROM employee
+WHERE id=#[flowVars.employeeId]]]></db:parameterized-query>
+        </db:delete>
+        <set-payload value="{&quot;message&quot;: &quot;Employee &quot;#[flowVars.name]&quot; was deleted successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getEmployeesByCompanyIdFlow">
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM employee
+WHERE company_id=#[flowVars.companyId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="aa12093c-9347-40e2-96d0-02ff1b8661eb">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	firstName: payload01.first_name,
+	lastName: payload01.last_name,
+	companyId: payload01.company_id,
+	departmentId: payload01.department_id,
+	position: payload01.position
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="postEmployeeByCompanyIdFlow">
+        <set-variable variableName="name" value="#[json:firstName] #[json:lastName]" doc:name="Variable"/>
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO employee(first_name, last_name, age, passport_number, phone_number, address, company_id, department_id, password, position, roles, login, creation_date)
+VALUES(#[json:firstName], #[json:lastName], #[json:age], #[json:passportNumber], #[json:phoneNumber], #[json:address], #[flowVars.companyId], #[json:departmentId], #[json:password], #[json:position], #[json:roles], #[json:login], #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Employee &quot;#[flowVars.name]&quot; was created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getEmployeesByDepartmentIdFlow">
+        <set-variable variableName="departmentId" value="#[message.inboundProperties.'http.uri.params'.department_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM employee
+WHERE department_id=#[flowVars.departmentId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="b884513d-b043-4f87-88c1-d0dee570b162">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	firstName: payload01.first_name,
+	lastName: payload01.last_name,
+	companyId: payload01.company_id,
+	departmentId: payload01.department_id,
+	position: payload01.position
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="postEmployeeByDepartmentIdFlow">
+        <set-variable variableName="name" value="#[json:firstName] #[json:lastName]" doc:name="Variable"/>
+        <set-variable variableName="departmentId" value="#[message.inboundProperties.'http.uri.params'.department_id]" doc:name="Variable"/>
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO employee(first_name, last_name, age, passport_number, phone_number, address, company_id, department_id, password, position, roles, login, creation_date)
+VALUES(#[json:firstName], #[json:lastName], #[json:age], #[json:passportNumber], #[json:phoneNumber], #[json:address], #[json:companyId], #[flowVars.departmentId], #[json:password], #[json:position], #[json:roles], #[json:login], #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Employee &quot;#[flowVars.name]&quot; was created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getVacationsFlow">
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM vacation]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	employeeId: payload01.employee_id,
+	companyId: payload01.company_id,
+	departmentId: payload01.department_id,
+	startDate: payload01.start_vacation_date,
+	periodOfDays: payload01.period_of_days,
+	status: payload01.status
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="postVacationsFlow">
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO vacation(company_id, department_id, employee_id, period_of_days, start_vacation_date, status, creation_date)
+VALUES(#[json:companyId], #[json:departmentId], #[json:employeeId], #[json:periodOfDays], #[json:startDate], 'In process', #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Vacation was created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getVacationByIdFlow">
+        <set-variable variableName="vacationId" value="#[message.inboundProperties.'http.uri.params'.vacation_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM vacation
+WHERE id=#[flowVars.vacationId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="d8a0afc0-dbf7-4cb7-93f7-20cecb680dcf">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	id: payload.id[0],
+	employeeId: payload.employee_id[0],
+	companyId: payload.company_id[0],
+	departmentId: payload.department_id[0],
+	startDate: payload.start_vacation_date[0],
+	periodOfDays: payload.period_of_days[0],
+	status: payload.status[0],
+	creationDate: payload.creation_date[0] as :string {format: "yyyy-MM-dd"}
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="putVacationByIdFlow">
+        <set-variable variableName="vacationId" value="#[message.inboundProperties.'http.uri.params'.vacation_id]" doc:name="Variable"/>
+        <db:update config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[UPDATE vacation
+SET
+	company_id = #[json:companyId], 
+	department_id = #[json:departmentId], 
+	employee_id = #[json:employeeId], 
+	period_of_days = #[json:periodOfDays], 
+	start_vacation_date = #[json:startDate], 
+	status = #[json:status]
+WHERE id = #[flowVars.vacationId]]]></db:parameterized-query>
+        </db:update>
+        <set-payload value="{&quot;message&quot;: &quot;Vacation was modified successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="deleteVacationByIdFlow">
+        <set-property propertyName="http.status" value="200" doc:name="Property"/>
+        <set-variable variableName="vacationId" value="#[message.inboundProperties.'http.uri.params'.vacation_id]" doc:name="Variable"/>
+        <db:delete config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[DELETE FROM vacation
+WHERE id=#[flowVars.vacationId]]]></db:parameterized-query>
+        </db:delete>
+        <set-payload value="{&quot;message&quot;: &quot;Vacation was deleted successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getVacationByCompanyIdFlow">
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM vacation
+WHERE company_id=#[flowVars.companyId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="32bd180d-80d4-46bc-8f71-90e08f14e0b7">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	employeeId: payload01.employee_id,
+	companyId: payload01.company_id,
+	departmentId: payload01.department_id,
+	startDate: payload01.start_vacation_date,
+	periodOfDays: payload01.period_of_days,
+	status: payload01.status
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="postVacationsByCompanyIdFlow">
+        <set-variable variableName="companyId" value="#[message.inboundProperties.'http.uri.params'.company_id]" doc:name="Variable"/>
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO vacation(company_id, department_id, employee_id, period_of_days, start_vacation_date, status, creation_date)
+VALUES(#[flowVars.companyId], #[json:departmentId], #[json:employeeId], #[json:periodOfDays], #[json:startDate], 'In process', #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Vacation was created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getVacationByDepartmentIdFlow">
+        <set-variable variableName="departmentId" value="#[message.inboundProperties.'http.uri.params'.department_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM vacation
+WHERE department_id=#[flowVars.departmentId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="81eb43a0-d17f-47f0-8fcf-61d9259f1af4">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	employeeId: payload01.employee_id,
+	companyId: payload01.company_id,
+	departmentId: payload01.department_id,
+	startDate: payload01.start_vacation_date,
+	periodOfDays: payload01.period_of_days,
+	status: payload01.status
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="postVacationsByDepartmentIdFlow">
+        <set-variable variableName="departmentId" value="#[message.inboundProperties.'http.uri.params'.department_id]" doc:name="Variable"/>
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO vacation(company_id, department_id, employee_id, period_of_days, start_vacation_date, status, creation_date)
+VALUES(#[json:companyId], #[flowVars.departmentId], #[json:employeeId], #[json:periodOfDays], #[json:startDate], 'In process', #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Vacation was created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="getVacationByEmployeeIdFlow">
+        <set-variable variableName="employeeId" value="#[message.inboundProperties.'http.uri.params'.employee_id]" doc:name="Variable"/>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT *
+FROM vacation
+WHERE employee_id=#[flowVars.employeeId]]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="c2106522-78b5-4462-9615-309b0434fad5">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	id: payload01.id,
+	employeeId: payload01.employee_id,
+	companyId: payload01.company_id,
+	departmentId: payload01.department_id,
+	startDate: payload01.start_vacation_date,
+	periodOfDays: payload01.period_of_days,
+	status: payload01.status
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="postVacationsByEmployeeIdFlow">
+        <set-variable variableName="employeeId" value="#[message.inboundProperties.'http.uri.params'.employee_id]" doc:name="Variable"/>
+        <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO vacation(company_id, department_id, employee_id, period_of_days, start_vacation_date, status, creation_date)
+VALUES(#[json:companyId], #[json:departmentId], #[flowVars.employeeId], #[json:periodOfDays], #[json:startDate], 'In process', #[function:now])]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="{&quot;message&quot;: &quot;Vacation was created successfully&quot;}" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>
