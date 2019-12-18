@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
     <flow name="getCompaniesFlow">
         <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[SELECT * 
+			<db:parameterized-query><![CDATA[SELECT * 
 FROM company]]></db:parameterized-query>
         </db:select>
         <dw:transform-message doc:name="Transform Message" metadata:id="b8416f82-a157-4b33-8e73-a8b21c0ad284">
@@ -531,4 +531,5 @@ VALUES(#[json:companyId], #[json:departmentId], #[flowVars.employeeId], #[json:p
         <set-payload value="{&quot;message&quot;: &quot;Vacation was created successfully&quot;}" doc:name="Set Payload"/>
         <logger level="INFO" doc:name="Logger"/>
     </flow>
+
 </mule>

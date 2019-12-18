@@ -3,10 +3,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mycompany</groupId>
-	<artifactId>hr-administration-api-mule3</artifactId>
+	<artifactId>testy</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>mule</packaging>
-	<name>Mule hr-administration-api-mule3 Application</name>
+	<name>Mule testy Application</name>
 
     <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,9 @@
 
 		<mule.version>3.9.3</mule.version>
     	<mule.tools.version>1.7</mule.tools.version>
-	</properties>
+	<munit.version>1.3.10</munit.version>
+    <mule.munit.support.version>3.9.2</mule.munit.support.version>
+    </properties>
 
 	<build>
 		<plugins>
@@ -54,8 +56,38 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
-	</build>
+		<plugin>
+                <groupId>com.mulesoft.munit.tools</groupId>
+                <artifactId>munit-maven-plugin</artifactId>
+                <version>${munit.version}</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <coverage>
+                        <runCoverage>true</runCoverage>
+                        <formats>
+                            <format>html</format>
+                        </formats>
+                    </coverage>
+                </configuration>
+            </plugin>
+        </plugins>
+	<testResources>
+            <testResource>
+                <directory>src/test/munit</directory>
+            </testResource>
+        <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+    </build>
 
 	<!-- Mule Dependencies -->
 	<dependencies>
@@ -117,12 +149,6 @@
 			<version>${mule.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- PostgreSQL DB -->
-		<dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
-        </dependency>
 		<!-- for testing -->
 		<dependency>
 			<groupId>org.mule.tests</groupId>
@@ -132,13 +158,7 @@
 		</dependency>
 	<dependency>
             <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-apikit</artifactId>
-            <version>${mule.version}</version>
-            <scope>provided</scope>
-        </dependency>
-    <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-db</artifactId>
+            <artifactId>mule-module-http</artifactId>
             <version>${mule.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -149,10 +169,16 @@
             <scope>provided</scope>
         </dependency>
     <dependency>
-            <groupId>com.mulesoft.weave</groupId>
-            <artifactId>mule-plugin-weave</artifactId>
-            <version>${mule.version}</version>
-            <scope>provided</scope>
+            <groupId>com.mulesoft.munit</groupId>
+            <artifactId>mule-munit-support</artifactId>
+            <version>${mule.munit.support.version}</version>
+            <scope>test</scope>
+        </dependency>
+    <dependency>
+            <groupId>com.mulesoft.munit</groupId>
+            <artifactId>munit-runner</artifactId>
+            <version>${munit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

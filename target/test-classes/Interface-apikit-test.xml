@@ -1,0 +1,1411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
+    <spring:beans>
+        <spring:import resource="classpath:Interface.xml"/>
+        <spring:import resource="classpath:implementation.xml"/>
+        <spring:import resource="classpath:global.xml"/>
+    </spring:beans>
+    <munit:config mock-connectors="false" mock-inbounds="false" doc:name="MUnit configuration"/>
+    <http:request-config name="HTTP_Request_Configuration" host="localhost" port="8081" basePath="/api" doc:name="HTTP Request Configuration"/>
+    <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-200-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_200_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-301-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-301-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(301))]" doc:name="assert that - http.status eq 301"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_301_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_400_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_403_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_404_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <!-- <munit:test name="put:/departments/department_id:application/json:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [put:/departments/department_id:application/json:human-resources-api-config-200-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_200_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/departments/department_id:application/json:human-resources-api-config-301-application/json-FlowTest" description="Verifying functionality of [put:/departments/department_id:application/json:human-resources-api-config-301-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(301))]" doc:name="assert that - http.status eq 301"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_301_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/departments/department_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [put:/departments/department_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_400_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/departments/department_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [put:/departments/department_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_403_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/departments/department_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [put:/departments/department_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_404_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test> -->
+    <!-- <munit:test name="put:/employees/employee_id:application/json:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [put:/employees/employee_id:application/json:human-resources-api-config-200-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_200_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/employees/employee_id:application/json:human-resources-api-config-301-application/json-FlowTest" description="Verifying functionality of [put:/employees/employee_id:application/json:human-resources-api-config-301-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(301))]" doc:name="assert that - http.status eq 301"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_301_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/employees/employee_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [put:/employees/employee_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_400_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/employees/employee_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [put:/employees/employee_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_403_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/employees/employee_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [put:/employees/employee_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_404_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/vacations/vacation_id:application/json:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [put:/vacations/vacation_id:application/json:human-resources-api-config-200-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_vacations_{vacation_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_200_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/vacations/vacation_id:application/json:human-resources-api-config-301-application/json-FlowTest" description="Verifying functionality of [put:/vacations/vacation_id:application/json:human-resources-api-config-301-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_vacations_{vacation_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(301))]" doc:name="assert that - http.status eq 301"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_301_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/vacations/vacation_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [put:/vacations/vacation_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_vacations_{vacation_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_400_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/vacations/vacation_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [put:/vacations/vacation_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_vacations_{vacation_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string" metadata:id="065810fb-d299-4b19-ae08-9c18d012d823"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_403_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="put:/vacations/vacation_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [put:/vacations/vacation_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/put_vacations_{vacation_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="PUT" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_404_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test> -->
+    <munit:test name="delete:/companies/company_id:human-resources-api-config-204-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-204-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(204))]" doc:name="assert that - http.status eq 204"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_204_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/companies/company_id:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-400-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_400_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/companies/company_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-403-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_403_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/companies/company_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_404_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <!-- <munit:test name="delete:/departments/department_id:human-resources-api-config-204-application/json-FlowTest" description="Verifying functionality of [delete:/departments/department_id:human-resources-api-config-204-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(204))]" doc:name="assert that - http.status eq 204"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_204_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/departments/department_id:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [delete:/departments/department_id:human-resources-api-config-400-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_400_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/departments/department_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [delete:/departments/department_id:human-resources-api-config-403-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_403_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/departments/department_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [delete:/departments/department_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_404_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/employees/employee_id:human-resources-api-config-204-application/json-FlowTest" description="Verifying functionality of [delete:/employees/employee_id:human-resources-api-config-204-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(204))]" doc:name="assert that - http.status eq 204"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_204_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/employees/employee_id:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [delete:/employees/employee_id:human-resources-api-config-400-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_400_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/employees/employee_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [delete:/employees/employee_id:human-resources-api-config-403-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_403_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/employees/employee_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [delete:/employees/employee_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_404_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/vacations/vacation_id:human-resources-api-config-204-application/json-FlowTest" description="Verifying functionality of [delete:/vacations/vacation_id:human-resources-api-config-204-application/json]">
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(204))]" doc:name="assert that - http.status eq 204"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_204_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/vacations/vacation_id:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [delete:/vacations/vacation_id:human-resources-api-config-400-application/json]">
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_400_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/vacations/vacation_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [delete:/vacations/vacation_id:human-resources-api-config-403-application/json]">
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_403_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="delete:/vacations/vacation_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [delete:/vacations/vacation_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_404_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test> -->
+    <munit:test name="get:/companies:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/companies:human-resources-api-config-200-application/json]">
+        <mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="[{&quot;id&quot; : 1, &quot;name&quot; : &quot;First Company&quot;},{&quot;id&quot; : 2, &quot;name&quot; : &quot;Second Company&quot;}]" encoding="UTF-8" mimeType="application/json"/>
+        </mock:when>
+        <mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Transform Message']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]"/>
+        </mock:when>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="GET" doc:name="HTTP" metadata:id="d5a2f78f-770e-4b6f-8317-307d0272d923">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <byte-array-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/companies:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/companies:human-resources-api-config-404-application/json]">
+        <http:request config-ref="HTTP_Request_Configuration" path="/companiess" method="GET" doc:name="HTTP">
+            <http:request-builder>
+				<http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+		<byte-array-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <!-- <munit:test name="get:/vacations/companies/company_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/vacations/companies/company_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/companies/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_vacations_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations/companies/company_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/vacations/companies/company_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/companies/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_vacations_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees/companies/company_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/employees/companies/company_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/companies/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_employees_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees/companies/company_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/employees/companies/company_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/companies/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_employees_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/departments/companies/company_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/departments/companies/company_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/companies/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_departments_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/departments/companies/company_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/departments/companies/company_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/companies/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_departments_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/departments:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/departments:human-resources-api-config-200-application/json]">
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_departments_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/departments:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/departments:human-resources-api-config-404-application/json]">
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_departments_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations/departments/department_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/vacations/departments/department_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/departments/#[flowVars['department_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_vacations_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations/departments/department_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/vacations/departments/department_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/departments/#[flowVars['department_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_vacations_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees/departments/department_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/employees/departments/department_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/departments/#[flowVars['department_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_employees_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees/departments/department_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/employees/departments/department_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/departments/#[flowVars['department_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_employees_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/employees:human-resources-api-config-200-application/json]">
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_employees_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/employees:human-resources-api-config-404-application/json]">
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_employees_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations/employees/employee_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/vacations/employees/employee_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/employees/#[flowVars['employee_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_vacations_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations/employees/employee_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/vacations/employees/employee_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/employees/#[flowVars['employee_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_vacations_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/vacations:human-resources-api-config-200-application/json]">
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_vacations_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/vacations:human-resources-api-config-404-application/json]">
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_vacations_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test> -->
+    <munit:test name="get:/companies/company_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/companies/company_id:human-resources-api-config-200-application/json]">
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="{&quot;id&quot; : 2, &quot;name&quot; : &quot;First Company&quot;, &quot;creationDate&quot;: &quot;2019-11-06&quot;}" encoding="UTF-8" mimeType="application/json"/>
+		</mock:when>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Transform Message']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]"/>
+		</mock:when>
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+				<http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/companies/company_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [get:/companies/company_id:human-resources-api-config-403-application/json]">
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="{ &quot;message&quot;: &quot;Forbidden&quot; }" encoding="UTF-8" mimeType="application/json">
+				<mock:outbound-properties>
+					<mock:outbound-property key="http.status" value="403"/>
+				</mock:outbound-properties>
+			</mock:then-return>
+		</mock:when>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Transform Message']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]"/>
+		</mock:when>
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+				<http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_403_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/companies/company_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/companies/company_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companiess/#[flowVars['company_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+				<http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <!-- <munit:test name="get:/departments/department_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/departments/department_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/departments/department_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [get:/departments/department_id:human-resources-api-config-403-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_403_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/departments/department_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/departments/department_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/#[flowVars['department_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees/employee_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/employees/employee_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees/employee_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [get:/employees/employee_id:human-resources-api-config-403-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_403_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/employees/employee_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/employees/employee_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/#[flowVars['employee_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations/vacation_id:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/vacations/vacation_id:human-resources-api-config-200-application/json]">
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_200_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations/vacation_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [get:/vacations/vacation_id:human-resources-api-config-403-application/json]">
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_403_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="get:/vacations/vacation_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [get:/vacations/vacation_id:human-resources-api-config-404-application/json]">
+        <set-variable variableName="vacation_id" value="#['null']" doc:name="vacation_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/#[flowVars['vacation_id']]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/get_404_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/departments/companies/company_id:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/departments/companies/company_id:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_departments_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_departments_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/departments/companies/company_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/departments/companies/company_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_departments_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_departments_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/departments/companies/company_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/departments/companies/company_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_departments_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_departments_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/departments/companies/company_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/departments/companies/company_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_departments_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_departments_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/companies/company_id:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/vacations/companies/company_id:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_vacations_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/companies/company_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/vacations/companies/company_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_vacations_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/companies/company_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/vacations/companies/company_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_vacations_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/companies/company_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/vacations/companies/company_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_vacations_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees/companies/company_id:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/employees/companies/company_id:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_employees_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees/companies/company_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/employees/companies/company_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_employees_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees/companies/company_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/employees/companies/company_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_employees_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees/companies/company_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/employees/companies/company_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_employees_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test> -->
+    <munit:test name="post:/companies:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_companies_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/companies:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_companies_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/companies:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_companies_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/companies:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_companies_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <!-- <munit:test name="post:/employees/departments/department_id:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/employees/departments/department_id:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/departments/#[flowVars['department_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_employees_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees/departments/department_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/employees/departments/department_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/departments/#[flowVars['department_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_employees_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees/departments/department_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/employees/departments/department_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/departments/#[flowVars['department_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_employees_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees/departments/department_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/employees/departments/department_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees/departments/#[flowVars['department_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_employees_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/departments/department_id:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/vacations/departments/department_id:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/departments/#[flowVars['department_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_vacations_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/departments/department_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/vacations/departments/department_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/departments/#[flowVars['department_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_vacations_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/departments/department_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/vacations/departments/department_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/departments/#[flowVars['department_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_vacations_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/departments/department_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/vacations/departments/department_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_departments_{department_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="department_id" value="#['null']" doc:name="department_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/departments/#[flowVars['department_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_vacations_departments_{department_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/departments:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/departments:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_departments_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_departments_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/departments:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/departments:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_departments_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_departments_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/departments:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/departments:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_departments_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_departments_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/departments:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/departments:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_departments_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/departments" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_departments_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/employees/employee_id:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/vacations/employees/employee_id:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/employees/#[flowVars['employee_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_vacations_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/employees/employee_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/vacations/employees/employee_id:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/employees/#[flowVars['employee_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_vacations_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/employees/employee_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/vacations/employees/employee_id:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/employees/#[flowVars['employee_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_vacations_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations/employees/employee_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/vacations/employees/employee_id:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_employees_{employee_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="employee_id" value="#['null']" doc:name="employee_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations/employees/#[flowVars['employee_id']]" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_vacations_employees_{employee_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/employees:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_employees_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/employees:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_employees_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/employees:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_employees_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/employees:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/employees:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_employees_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/employees" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_employees_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/vacations:application/json:human-resources-api-config-201-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_vacations_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/vacations:application/json:human-resources-api-config-400-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="400"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_vacations_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/vacations:application/json:human-resources-api-config-403-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="403"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(403))]" doc:name="assert that - http.status eq 403"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_403_vacations_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test>
+    <munit:test name="post:/vacations:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/vacations:application/json:human-resources-api-config-404-application/json]">
+        <set-payload value="#[getResource('scaffolder/request/post_vacations_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/vacations" method="POST" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json"/>
+                <http:header headerName="Content-Type" value="application/json"/>
+            </http:request-builder>
+            <http:success-status-code-validator values="404"/>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(404))]" doc:name="assert that - http.status eq 404"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_vacations_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+    </munit:test> -->
+</mule>

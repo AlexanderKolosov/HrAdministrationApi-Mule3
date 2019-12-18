@@ -5,6 +5,7 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd">
+	<http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8082" doc:name="HTTP Listener Configuration"/>
     <flow name="human-resources-api-main">
         <http:listener config-ref="human-resources-api-httpListenerConfig" path="/api/*" doc:name="HTTP" />
         <apikit:router config-ref="human-resources-api-config" doc:name="APIkit Router"/>
@@ -14,7 +15,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <http:listener config-ref="human-resources-api-httpListenerConfig" path="/console/*" doc:name="HTTP" />
         <apikit:console config-ref="human-resources-api-config" doc:name="APIkit Console"/>
     </flow>
-    <flow name="get:/companies">
+    <flow name="get:/companies:human-resources-api-config">
         <flow-ref name="getCompaniesFlow" doc:name="getCompaniesFlow"/>
         <logger level="INFO" doc:name="Logger"/>
     </flow>
@@ -147,7 +148,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:mapping statusCode="404">
             <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
             <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
-            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
+            <set-payload value="{ &quot;message&quot; : &quot;Resource not found&quot; }" doc:name="Set Payload"/>
         </apikit:mapping>
         <apikit:mapping statusCode="405">
             <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
