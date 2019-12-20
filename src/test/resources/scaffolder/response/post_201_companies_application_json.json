@@ -1,1 +1,1 @@
-[{"id" : 1, "name" : "First Company"},{"id" : 2, "name" : "Second Company"}]
+{"message": "Company "First Company" was created successfully"}

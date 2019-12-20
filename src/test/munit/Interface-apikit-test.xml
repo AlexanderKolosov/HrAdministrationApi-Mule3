@@ -13,8 +13,13 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
     <munit:config mock-connectors="false" mock-inbounds="false" doc:name="MUnit configuration"/>
     <http:request-config name="HTTP_Request_Configuration" host="localhost" port="8081" basePath="/api" doc:name="HTTP Request Configuration"/>
     <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-200-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-200-application/json]">
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+		</mock:when>
         <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
-        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
         <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
             <http:request-builder>
                 <http:header headerName="Accept" value="application/json"/>
@@ -25,26 +30,18 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
         <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200"/>
         <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_200_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
     </munit:test>
-    <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-301-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-301-application/json]">
-        <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
-        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
-        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
-            <http:request-builder>
-                <http:header headerName="Accept" value="application/json"/>
-                <http:header headerName="Content-Type" value="application/json"/>
-            </http:request-builder>
-        </http:request>
-        <object-to-string-transformer doc:name="http response to string"/>
-        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(301))]" doc:name="assert that - http.status eq 301"/>
-        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_301_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
-    </munit:test>
     <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-400-application/json]">
-        <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
-        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+		<mock:throw-an exception-ref="#[new org.mule.module.apikit.exception.BadRequestException(&quot;{ \&quot;message\&quot; : \&quot;Bad Request\&quot; }&quot;)]" whenCalling=".*:.*" doc:name="Throw an Exception">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+		</mock:throw-an>
+		<set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
         <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
             <http:request-builder>
-                <http:header headerName="Accept" value="application/json"/>
-                <http:header headerName="Content-Type" value="application/json"/>
+				<http:header headerName="Accept" value="application/json"/>
+				<http:header headerName="Content-Type" value="application/json"/>
             </http:request-builder>
             <http:success-status-code-validator values="400"/>
         </http:request>
@@ -53,8 +50,24 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
         <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_400_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
     </munit:test>
     <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-403-application/json]">
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return>
+				<mock:outbound-properties>
+					<mock:outbound-property key="http.status" value="403"/>
+				</mock:outbound-properties>
+			</mock:then-return>
+		</mock:when>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Set Payload']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="{ &quot;message&quot; : &quot;Forbidden&quot; }"/>
+		</mock:when>
         <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
-        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
         <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
             <http:request-builder>
                 <http:header headerName="Accept" value="application/json"/>
@@ -69,10 +82,10 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
     <munit:test name="put:/companies/company_id:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [put:/companies/company_id:application/json:human-resources-api-config-404-application/json]">
         <set-payload value="#[getResource('scaffolder/request/put_companies_{company_id}_application_json.json').asString()]" doc:name="Set Payload"/>
         <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
-        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
+        <http:request config-ref="HTTP_Request_Configuration" path="/companiess/#[flowVars['company_id']]" method="PUT" doc:name="HTTP">
             <http:request-builder>
-                <http:header headerName="Accept" value="application/json"/>
-                <http:header headerName="Content-Type" value="application/json"/>
+				<http:header headerName="Accept" value="application/json"/>
+				<http:header headerName="Content-Type" value="application/json"/>
             </http:request-builder>
             <http:success-status-code-validator values="404"/>
         </http:request>
@@ -285,7 +298,17 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
         <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/put_404_vacations_{vacation_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
     </munit:test> -->
     <munit:test name="delete:/companies/company_id:human-resources-api-config-204-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-204-application/json]">
-        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]">
+				<mock:outbound-properties>
+					<mock:outbound-property key="http.status" value="204"/>
+				</mock:outbound-properties>
+			</mock:then-return>
+		</mock:when>
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
         <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
             <http:request-builder>
                 <http:header headerName="Accept" value="application/json"/>
@@ -293,22 +316,50 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
         </http:request>
         <object-to-string-transformer doc:name="http response to string"/>
         <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(204))]" doc:name="assert that - http.status eq 204"/>
-        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_204_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[&quot;&quot;]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
     </munit:test>
-    <munit:test name="delete:/companies/company_id:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-400-application/json]">
-        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
-        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
+    <munit:test name="delete:/companies/company_id:human-resources-api-config-405-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-405-application/json]">
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="POST" doc:name="HTTP">
             <http:request-builder>
-                <http:header headerName="Accept" value="application/json"/>
+				<http:header headerName="Accept" value="application/json"/>
             </http:request-builder>
-            <http:success-status-code-validator values="400"/>
+            <http:success-status-code-validator values="405"/>
         </http:request>
         <object-to-string-transformer doc:name="http response to string"/>
-        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
-        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_400_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(405))]" doc:name="assert that - http.status eq 405"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/delete_405_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
     </munit:test>
     <munit:test name="delete:/companies/company_id:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-403-application/json]">
-        <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Property']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]"/>
+		</mock:when>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]"/>
+		</mock:when>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="{ &quot;message&quot; : &quot;Forbidden&quot; }" encoding="UTF-8" mimeType="application/json">
+				<mock:outbound-properties>
+					<mock:outbound-property key="http.status" value="403"/>
+				</mock:outbound-properties>
+			</mock:then-return>
+		</mock:when>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Set Payload']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]"/>
+		</mock:when>
+        <set-variable variableName="company_id" value="2" doc:name="company_id"/>
         <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
             <http:request-builder>
                 <http:header headerName="Accept" value="application/json"/>
@@ -321,9 +372,9 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
     </munit:test>
     <munit:test name="delete:/companies/company_id:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [delete:/companies/company_id:human-resources-api-config-404-application/json]">
         <set-variable variableName="company_id" value="#['null']" doc:name="company_id"/>
-        <http:request config-ref="HTTP_Request_Configuration" path="/companies/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
+        <http:request config-ref="HTTP_Request_Configuration" path="/companiess/#[flowVars['company_id']]" method="DELETE" doc:name="HTTP">
             <http:request-builder>
-                <http:header headerName="Accept" value="application/json"/>
+				<http:header headerName="Accept" value="application/json"/>
             </http:request-builder>
             <http:success-status-code-validator values="404"/>
         </http:request>
@@ -1040,6 +1091,12 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
         <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_404_employees_companies_{company_id}_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
     </munit:test> -->
     <munit:test name="post:/companies:application/json:human-resources-api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-201-application/json]">
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]"/>
+		</mock:when>
         <set-payload value="#[getResource('scaffolder/request/post_companies_application_json.json').asString()]" doc:name="Set Payload"/>
         <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="POST" doc:name="HTTP">
             <http:request-builder>
@@ -1051,20 +1108,42 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
         <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201"/>
         <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
     </munit:test>
-    <munit:test name="post:/companies:application/json:human-resources-api-config-400-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-400-application/json]">
-        <set-payload value="#[getResource('scaffolder/request/post_companies_application_json.json').asString()]" doc:name="Set Payload"/>
-        <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="POST" doc:name="HTTP">
+    <munit:test name="post:/companies:application/json:human-resources-api-config-405-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-405-application/json]">
+		<set-payload value="{ &quot;name&quot;: &quot;41&quot; }" mimeType="application/json" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="PUT" doc:name="HTTP">
             <http:request-builder>
-                <http:header headerName="Accept" value="application/json"/>
-                <http:header headerName="Content-Type" value="application/json"/>
+				<http:header headerName="Accept" value="application/json"/>
+				<http:header headerName="Content-Type" value="application/json"/>
             </http:request-builder>
-            <http:success-status-code-validator values="400"/>
+            <http:success-status-code-validator values="405"/>
         </http:request>
         <object-to-string-transformer doc:name="http response to string"/>
-        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(400))]" doc:name="assert that - http.status eq 400"/>
-        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_400_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(405))]" doc:name="assert that - http.status eq 405"/>
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_405_companies_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected"/>
     </munit:test>
     <munit:test name="post:/companies:application/json:human-resources-api-config-403-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-403-application/json]">
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Variable']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="First Company"/>
+		</mock:when>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Database']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="{ &quot;message&quot; : &quot;Forbidden&quot; }" encoding="UTF-8" mimeType="application/json">
+				<mock:outbound-properties>
+					<mock:outbound-property key="http.status" value="403"/>
+				</mock:outbound-properties>
+			</mock:then-return>
+		</mock:when>
+		<mock:when messageProcessor=".*:.*" doc:name="Mock">
+			<mock:with-attributes>
+				<mock:with-attribute name="doc:name" whereValue="#['Set Payload']"/>
+			</mock:with-attributes>
+			<mock:then-return payload="#[]"/>
+		</mock:when>
         <set-payload value="#[getResource('scaffolder/request/post_companies_application_json.json').asString()]" doc:name="Set Payload"/>
         <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="POST" doc:name="HTTP">
             <http:request-builder>
@@ -1079,10 +1158,10 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
     </munit:test>
     <munit:test name="post:/companies:application/json:human-resources-api-config-404-application/json-FlowTest" description="Verifying functionality of [post:/companies:application/json:human-resources-api-config-404-application/json]">
         <set-payload value="#[getResource('scaffolder/request/post_companies_application_json.json').asString()]" doc:name="Set Payload"/>
-        <http:request config-ref="HTTP_Request_Configuration" path="/companies" method="POST" doc:name="HTTP">
+        <http:request config-ref="HTTP_Request_Configuration" path="/companiess" method="POST" doc:name="HTTP">
             <http:request-builder>
-                <http:header headerName="Accept" value="application/json"/>
-                <http:header headerName="Content-Type" value="application/json"/>
+				<http:header headerName="Accept" value="application/json"/>
+				<http:header headerName="Content-Type" value="application/json"/>
             </http:request-builder>
             <http:success-status-code-validator values="404"/>
         </http:request>
