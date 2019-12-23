@@ -5,7 +5,7 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd">
-	<http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8082" doc:name="HTTP Listener Configuration"/>
+
     <flow name="human-resources-api-main">
         <http:listener config-ref="human-resources-api-httpListenerConfig" path="/api/*" doc:name="HTTP" />
         <apikit:router config-ref="human-resources-api-config" doc:name="APIkit Router"/>
@@ -16,132 +16,133 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <apikit:console config-ref="human-resources-api-config" doc:name="APIkit Console"/>
     </flow>
     <flow name="get:/companies:human-resources-api-config">
+		<logger message="App entered in the get:/companies flow." level="INFO" doc:name="Logger"/>
         <flow-ref name="getCompaniesFlow" doc:name="getCompaniesFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/companies">
+		<logger message="App entered in the post:/companies flow." level="INFO" doc:name="Logger"/>
         <flow-ref name="postCompaniesFlow" doc:name="postCompaniesFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/companies/{company_id}">
-        <flow-ref name="getCompanyByIdFlow" doc:name="getCompanyByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
+		<logger message="App entered in the get:/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
+		<flow-ref name="getCompanyByIdFlow" doc:name="getCompanyByIdFlow"/>
     </flow>
     <flow name="put:/companies/{company_id}">
+		<logger message="App entered in the put:/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="putCompanyByIdFlow" doc:name="putCompanyByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
+
     </flow>
     <flow name="delete:/companies/{company_id}">
+		<logger message="App entered in the delete:/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="deleteCompanyByIdFlow" doc:name="deleteCompanyByIdFlow"/>
-        <logger message="Finished" level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/departments">
+		<logger message="App entered in the get:/departments flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getDepartmentsFlow" doc:name="getDepartmentsFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/departments">
+		<logger message="App entered in the post:/departments flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postDepartmentsFlow" doc:name="postDepartmentsFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/departments/{department_id}">
+		<logger message="App entered in the get:/departments/{department_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getDepartmentByIdFlow" doc:name="getDepartmentByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="put:/departments/{department_id}">
+		<logger message="App entered in the put:/departments/{department_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="putDepartmentByIdFlow" doc:name="putDepartmentByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="delete:/departments/{department_id}">
+		<logger message="App entered in the delete:/departments/{department_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="deleteDepartmentByIdFlow" doc:name="deleteDepartmentByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/departments/companies/{company_id}">
+		<logger message="App entered in the get:/departments/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getDepartmentByCompanyIdFlow" doc:name="getDepartmentByCompanyIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/departments/companies/{company_id}">
+		<logger message="App entered in the post:/departments/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postDepartmentsByCompanyIdFlow" doc:name="postDepartmentsByCompanyIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/employees">
+		<logger message="App entered in the get:/employees flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getEmployeesFlow" doc:name="getEmployeesFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/employees">
+		<logger message="App entered in the post:/employees flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postEmployeesFlow" doc:name="postEmployeesFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/employees/{employee_id}">
+		<logger message="App entered in the get:/employees/{employee_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getEmployeeByIdFlow" doc:name="getEmployeeByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="put:/employees/{employee_id}">
+		<logger message="App entered in the put:/employees/{employee_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="putEmployeeByIdFlow" doc:name="putEmployeeByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="delete:/employees/{employee_id}">
+		<logger message="App entered in the delete:/employees/{employee_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="deleteEmployeeByIdFlow" doc:name="deleteEmployeeByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/employees/companies/{company_id}">
+		<logger message="App entered in the get:/employees/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getEmployeesByCompanyIdFlow" doc:name="getEmployeesByCompanyIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/employees/companies/{company_id}">
+		<logger message="App entered in the post:/employees/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postEmployeeByCompanyIdFlow" doc:name="postEmployeeByCompanyIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/employees/departments/{department_id}">
+		<logger message="App entered in the get:/employees/departments/{department_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getEmployeesByDepartmentIdFlow" doc:name="getEmployeesByDepartmentIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/employees/departments/{department_id}">
+		<logger message="App entered in the post:/employees/departments/{department_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postEmployeeByDepartmentIdFlow" doc:name="postEmployeeByDepartmentIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/vacations">
+		<logger message="App entered in the get:/vacations flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getVacationsFlow" doc:name="getVacationsFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/vacations:human-resources-api-config">
+		<logger message="App entered in the post:/vacations flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postVacationsFlow" doc:name="postVacationsFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/vacations/{vacation_id}">
+		<logger message="App entered in the get:/vacations/{vacation_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getVacationByIdFlow" doc:name="getVacationByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="put:/vacations/{vacation_id}">
+		<logger message="App entered in the put:/vacations/{vacation_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="putVacationByIdFlow" doc:name="putVacationByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="delete:/vacations/{vacation_id}">
+		<logger message="App entered in the delete:/vacations/{vacation_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="deleteEmployeeByIdFlow" doc:name="deleteEmployeeByIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/vacations/companies/{company_id}">
+		<logger message="App entered in the get:/vacations/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getVacationByCompanyIdFlow" doc:name="getVacationByCompanyIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/vacations/companies/{company_id}">
+		<logger message="App entered in the post:/vacations/companies/{company_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postVacationsByCompanyIdFlow" doc:name="postVacationsByCompanyIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/vacations/departments/{department_id}">
+		<logger message="App entered in the get:/vacations/departments/{department_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getVacationByDepartmentIdFlow" doc:name="getVacationByDepartmentIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/vacations/departments/{department_id}">
+		<logger message="App entered in the post:/vacations/departments/{department_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postVacationsByDepartmentIdFlow" doc:name="postVacationsByDepartmentIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="get:/vacations/employees/{employee_id}">
+		<logger message="App entered in the get:/vacations/employees/{employee_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="getVacationByEmployeeIdFlow" doc:name="getVacationByEmployeeIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/vacations/employees/{employee_id}">
+		<logger message="App entered in the post:/vacations/employees/{employee_id} flow. " level="INFO" doc:name="Logger"/>
         <flow-ref name="postVacationsByEmployeeIdFlow" doc:name="postVacationsByEmployeeIdFlow"/>
-        <logger level="INFO" doc:name="Logger"/>
     </flow>
 
     <apikit:mapping-exception-strategy name="human-resources-api-apiKitGlobalExceptionMapping">

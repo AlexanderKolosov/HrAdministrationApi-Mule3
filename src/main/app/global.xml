@@ -17,5 +17,5 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 	<context:property-placeholder location="hr-administration-${env}.properties"/>
 	<apikit:config name="human-resources-api-config" raml="human-resources-api.raml" consoleEnabled="false" doc:name="Router" keepRamlBaseUri="false">
 	</apikit:config>
-    <db:generic-config name="Generic_Database_Configuration" url="${db.host}:${db.port}/${db.database}?password=${db.password}&amp;user=${db.user}" driverClassName="${db.driver}" doc:name="Generic Database Configuration"/>
+    <db:generic-config name="Generic_Database_Configuration" url="${db.host}:${db.port}/${db.database}?user=${db.user}&amp;password=${db.password}" driverClassName="${db.driver}" doc:name="Generic Database Configuration"/>
 </mule>
